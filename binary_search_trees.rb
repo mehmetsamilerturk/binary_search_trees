@@ -16,12 +16,12 @@ class Tree
     @root = build_tree(@array)
   end
 
-  def call_each(current = @root)
+  def preorder_traversal(current = @root)
     return nil if current.nil?
 
     puts current.data
-    call_each(current.left)
-    call_each(current.right)
+    preorder_traversal(current.left)
+    preorder_traversal(current.right)
   end
 
   def insert(value, current = @root)
@@ -65,6 +65,14 @@ class Tree
     end
   end
 
+  def find(value, current = @root)
+    unless current.nil?
+      find(value, current.left)
+      return current if value == current.data
+      find(value, current.right)
+    end
+  end
+
   private
 
   def min_value(current = @root)
@@ -97,5 +105,5 @@ tree.delete(3)
 tree.delete(23)
 tree.insert(25)
 tree.delete(8)
-# tree.call_each
-tree.inorder_traversal
+#tree.inorder_traversal
+#p tree.find(9)
