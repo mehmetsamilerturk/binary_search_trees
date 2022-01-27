@@ -153,6 +153,11 @@ class Tree
     false
   end
 
+  def rebalance(_current = @root)
+    list = inorder
+    @root = build_tree(list) unless balanced?
+  end
+
   private
 
   def min_value(current = @root)
@@ -180,10 +185,10 @@ end
 numbers = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 tree = Tree.new(numbers)
-# tree.insert(70)
-# tree.delete(3)
-# tree.delete(23)
-# tree.delete(1)
+tree.insert(70)
+tree.delete(3)
+tree.delete(23)
+tree.delete(1)
 # p tree
 # p tree.preorder
 # p tree.inorder
@@ -196,4 +201,7 @@ tree.pretty_print
 # p tree.height(tree.find(324))
 # p tree.depth(324)
 # p tree.height
-# p tree.balanced?
+p tree.balanced?
+tree.rebalance
+p tree.balanced?
+tree.pretty_print
