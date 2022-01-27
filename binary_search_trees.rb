@@ -18,12 +18,16 @@ class Tree
     @root = build_tree(@array)
   end
 
-  def preorder_traversal(current = @root)
+  def preorder(current = @root, list = [], &block)
     return nil if current.nil?
 
-    print "#{current.data} -> "
-    preorder_traversal(current.left)
-    preorder_traversal(current.right)
+    block.call(current) if block_given?
+    list.push(current.data) unless block_given?
+
+    preorder(current.left, list, &block)
+    preorder(current.right, list, &block)
+
+    list unless block_given?
   end
 
   def insert(value, current = @root)
@@ -59,12 +63,15 @@ class Tree
     current
   end
 
-  def inorder_traversal(current = @root)
+  def inorder(current = @root, list = [], &block)
     unless current.nil?
-      inorder_traversal(current.left)
-      print "#{current.data} -> "
-      inorder_traversal(current.right)
+      inorder(current.left, list, &block)
+      block.call(current) if block_given?
+      list.push(current.data) unless block_given?
+      inorder(current.right, list, &block)
     end
+
+    list unless block_given?
   end
 
   def find(value, current = @root)
@@ -92,6 +99,24 @@ class Tree
     end
 
     list unless block_given?
+  end
+
+  def postorder(current = @root, list = [], &block)
+    unless current.nil?
+      postorder(current.left, list, &block)
+      postorder(current.right, list, &block)
+
+      block.call(current) if block_given?
+      list.push(current.data) unless block_given?
+    end
+
+    list unless block_given?
+  end
+
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 
   private
@@ -127,8 +152,10 @@ tree = Tree.new(numbers)
 # tree.insert(25)
 # tree.delete(8)
 # p tree
-# tree.inorder_traversal
-# tree.preorder_traversal
+# p tree.inorder
+# p tree.preorder
+# tree.postorder {|node| puts node.data}
 # p tree.find(23)
-#p tree.level_order
-#tree.level_order {|node| puts node.data}
+# p tree.level_order
+# tree.level_order {|node| puts node.data}
+# tree.pretty_print
