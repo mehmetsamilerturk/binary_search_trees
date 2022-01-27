@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Node
   attr_accessor :data, :left, :right
 
@@ -158,6 +160,10 @@ class Tree
     @root = build_tree(list) unless balanced?
   end
 
+  def print_balance
+    puts balanced? ? 'Balanced' : 'Not balanced'
+  end
+
   private
 
   def min_value(current = @root)
@@ -182,26 +188,29 @@ class Tree
   end
 end
 
-numbers = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-
+numbers = (Array.new(15) { rand(1..100) })
 tree = Tree.new(numbers)
-tree.insert(70)
-tree.delete(3)
-tree.delete(23)
-tree.delete(1)
-# p tree
-# p tree.preorder
-# p tree.inorder
-# p tree.postorder
-# tree.postorder {|node| puts node.data}
-# p tree.find(23)
-# p tree.level_order
-# tree.level_order {|node| puts node.data}
 tree.pretty_print
-# p tree.height(tree.find(324))
-# p tree.depth(324)
-# p tree.height
-p tree.balanced?
+
+tree.print_balance
+
+puts "Level order traversal: #{tree.level_order}"
+puts "Preorder traversal: #{tree.preorder}"
+puts "Inorder traversal: #{tree.inorder}"
+puts "Postorder traversal: #{tree.postorder}"
+
+5.times do |_i|
+  number = rand(100..200)
+  tree.insert(number)
+end
+
+tree.pretty_print
+tree.print_balance
 tree.rebalance
-p tree.balanced?
 tree.pretty_print
+tree.print_balance
+
+puts "Level order traversal: #{tree.level_order}"
+puts "Preorder traversal: #{tree.preorder}"
+puts "Inorder traversal: #{tree.inorder}"
+puts "Postorder traversal: #{tree.postorder}"
