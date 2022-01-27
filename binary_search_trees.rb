@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Node
   attr_accessor :data, :left, :right
 
@@ -19,7 +21,7 @@ class Tree
   def preorder_traversal(current = @root)
     return nil if current.nil?
 
-    puts current.data
+    print "#{current.data} -> "
     preorder_traversal(current.left)
     preorder_traversal(current.right)
   end
@@ -66,11 +68,30 @@ class Tree
   end
 
   def find(value, current = @root)
-    unless current.nil?
-      find(value, current.left)
-      return current if value == current.data
-      find(value, current.right)
+    return current if current.nil? || current.data == value
+
+    return find(value, current.right) if current.data < value
+
+    find(value, current.left)
+  end
+
+  def level_order(current = @root, queue = [], list = [])
+    return if current.nil?
+
+    queue.push(current)
+
+    until queue.empty?
+      current = queue.first
+
+      yield(current) if block_given?
+      list.push(current.data) unless block_given?
+
+      queue.push(current.left) unless current.left.nil?
+      queue.push(current.right) unless current.right.nil?
+      queue.shift
     end
+
+    list unless block_given?
   end
 
   private
@@ -100,10 +121,14 @@ end
 numbers = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 
 tree = Tree.new(numbers)
-tree.insert(70)
-tree.delete(3)
-tree.delete(23)
-tree.insert(25)
-tree.delete(8)
-#tree.inorder_traversal
-#p tree.find(9)
+# tree.insert(70)
+# tree.delete(3)
+# tree.delete(23)
+# tree.insert(25)
+# tree.delete(8)
+# p tree
+# tree.inorder_traversal
+# tree.preorder_traversal
+# p tree.find(23)
+#p tree.level_order
+#tree.level_order {|node| puts node.data}
