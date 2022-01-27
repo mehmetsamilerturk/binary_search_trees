@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Node
   attr_accessor :data, :left, :right
 
@@ -119,6 +117,42 @@ class Tree
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 
+  def height(node = @root)
+    if node.nil?
+      -1
+    else
+      lefth = height(node.left)
+      righth = height(node.right)
+      1 + (lefth > righth ? lefth : righth)
+    end
+  end
+
+  def depth(node = @root, current = @root, count = 0)
+    return 0 if node == current
+    return -1 if current.nil?
+
+    if node < current.data
+      count += 1
+      depth(node, current.left, count)
+    elsif node > current.data
+      count += 1
+      depth(node, current.right, count)
+    else
+      count
+    end
+  end
+
+  def balanced?(current = @root)
+    return true if current.nil?
+
+    lefth = height(current.left)
+    righth = height(current.right)
+
+    return true if (lefth - righth).abs <= 1 && balanced?(current.left) & balanced?(current.right)
+
+    false
+  end
+
   private
 
   def min_value(current = @root)
@@ -149,13 +183,17 @@ tree = Tree.new(numbers)
 # tree.insert(70)
 # tree.delete(3)
 # tree.delete(23)
-# tree.insert(25)
-# tree.delete(8)
+# tree.delete(1)
 # p tree
-# p tree.inorder
 # p tree.preorder
+# p tree.inorder
+# p tree.postorder
 # tree.postorder {|node| puts node.data}
 # p tree.find(23)
 # p tree.level_order
 # tree.level_order {|node| puts node.data}
-# tree.pretty_print
+tree.pretty_print
+# p tree.height(tree.find(324))
+# p tree.depth(324)
+# p tree.height
+# p tree.balanced?
